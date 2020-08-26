@@ -2,17 +2,16 @@
 
 namespace App\Entity;
 
-use App\Repository\CommentRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=CommentRepository::class)
+ * @ORM\Entity(repositoryClass="App\Repository\CommentRepository")
  */
 class Comment
 {
     /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
     private $id;
@@ -38,15 +37,20 @@ class Comment
     private $createdAt;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Conference", inversedBy="comments")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $conference;
+
+    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $photoFilename;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Conference::class, inversedBy="comments")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $conference;
+    public function __toString(): string
+    {
+        return (string) $this->getEmail();
+    }
 
     public function getId(): ?int
     {
@@ -101,18 +105,6 @@ class Comment
         return $this;
     }
 
-    public function getPhotoFilename(): ?string
-    {
-        return $this->photoFilename;
-    }
-
-    public function setPhotoFilename(?string $photoFilename): self
-    {
-        $this->photoFilename = $photoFilename;
-
-        return $this;
-    }
-
     public function getConference(): ?Conference
     {
         return $this->conference;
@@ -121,6 +113,18 @@ class Comment
     public function setConference(?Conference $conference): self
     {
         $this->conference = $conference;
+
+        return $this;
+    }
+
+    public function getPhotoFilename(): ?string
+    {
+        return $this->photoFilename;
+    }
+
+    public function setPhotoFilename(?string $photoFilename): self
+    {
+        $this->photoFilename = $photoFilename;
 
         return $this;
     }
